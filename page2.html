@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Fill - Language Page</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 15px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 400px;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      resize: none;
+    }
+
+    /* Controls row */
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 15px 0;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    select {
+      padding: 6px 10px;
+      font-size: 14px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    /* Buttons row */
+    .btn-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    button {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      background-color: #007bff;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      textarea {
+        height: 250px;
+      }
+
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .btn-row {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      button {
+        flex: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <!-- Text Area -->
+    <textarea id="textArea" placeholder="Enter your text here..."></textarea>
+
+    <!-- Language & Audio Button -->
+    <div class="controls">
+      <label for="language">language:
+      <select id="language">
+        <option>English</option>
+        <option>Hindi</option>
+        <option>Telugu</option>
+        <option>Tamil</option>
+        <option>Kannada</option>
+        <option>Bengali</option>
+        <option>Odia</option>
+        <option>Marathi</option>
+        <option>Japanese</option>
+        <option>Chinese</option>
+        <option>Urdu</option>
+        <option>Thai</option>
+      </select>
+      </label>
+      <button id="startBtn">Audio Text</button>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="btn-row">
+      <button id="prev">Previous</button>
+      <button onclick="cancel()">Cancel</button>
+      <button id="next">Next</button>
+    </div>
+  </main>
+
+  <script>
+    // Navigation
+    document.getElementById("prev").addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
+
+    document.getElementById("next").addEventListener("click", () => {
+      window.location.href = "page3.html";
+    });
+
+    // Cancel clears text
+    document.getElementById("cancel").addEventListener("click", () => {
+      document.getElementById("text").value = "";
+    });
+function cancel(){
+  document.getElementById('textArea').value="";
+}
+    const output = document.getElementById("textArea");
+    const startBtn = document.getElementById("startBtn");
+
+    // Use SpeechRecognition (with webkit prefix for Chrome)
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+
+    recognition.continuous = true; // Keep listening
+    recognition.interimResults = true; // Show words while speaking
+    recognition.lang = "en-IN"; // Language
+
+    startBtn.onclick = () => {
+      recognition.start();
+      output.textContent = "Listening...";
+    };
+
+    recognition.onresult = (event) => {
+      let transcript = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript;
+      }
+      output.textContent = transcript;
+    };
+
+    recognition.onerror = (event) => {
+      output.textContent = "Error: " + event.error;
+    };
+  </script>
+</body>
+</html>

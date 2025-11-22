@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Fill</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+    }
+
+    header {
+      background-color: rgb(255, 150, 180);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+    }
+
+    header img {
+      height: 60px;
+    }
+
+    .menu-btn {
+      border: none;
+      background: none;
+      font-size: 28px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    main {
+      padding: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* Image preview box */
+    #previewBox {
+      width: 100%;
+      height: 300px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: white;
+      overflow: auto;
+      padding: 10px;
+    }
+
+    #previewBox img {
+      width: 100%;
+      max-height: 280px;
+      object-fit: contain;
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    button {
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    /* Overlay + Dialog */
+    #overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    #overlay.show {
+      display: block;
+    }
+
+    #dialogBox {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+      min-width: 220px;
+      text-align: center;
+    }
+
+    #dialogBox.show {
+      display: block;
+    }
+
+    #dialogBox button {
+      background: #eee;
+      color: #333;
+      font-size: 16px;
+      padding: 8px 0;
+      width: 100%;
+      margin-top: 6px;
+    }
+
+    #dialogBox button:hover {
+      background-color: #ddd;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      header {
+        flex-direction: column;
+        text-align: center;
+      }
+      header img {
+        height: 45px;
+        margin-bottom: 8px;
+      }
+      main {
+        padding: 10px;
+      }
+      #previewBox {
+        height: 220px;
+      }
+      .btn-group {
+        flex-direction: column;
+      }
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header>
+    <img src="/smartfill/image-7.png" alt="Smart Fill Logo">
+    <button class="menu-btn" id="openDialog">☰</button>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+
+    <!-- Image Preview Box -->
+    <div id="previewBox">
+      <!-- Selected image will appear here -->
+    </div>
+
+    <div class="btn-group">
+      <input type="file" id="fileInput" accept="image/*" hidden>
+      <button id="selbtn">Select Image</button>
+      <button id="auto">Auto Fill</button>
+      <button id="next">Next</button>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Smart Fill</p>
+  </footer>
+
+  <!-- Dialog -->
+  <div id="overlay"></div>
+  <div id="dialogBox">
+    <h3>Menu</h3>
+    <button>Save</button>
+    <button>Help</button>
+    <button id="closeDialog">Close</button>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById("fileInput");
+    const previewBox = document.getElementById("previewBox");
+
+    // Select Image button
+    document.getElementById("selbtn").onclick = () => {
+      fileInput.click();
+    };
+
+    // Display selected image inside preview box
+    fileInput.addEventListener("change", function() {
+      const file = this.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+
+      reader.onload = function(event) {
+        previewBox.innerHTML = "";  // Clear old content
+
+        const img = document.createElement("img");
+        img.src = event.target.result;
+
+        previewBox.appendChild(img);
+      };
+
+      reader.readAsDataURL(file);
+    });
+
+    // Dialog open
+    document.getElementById("openDialog").onclick = () => {
+      document.getElementById("overlay").classList.add("show");
+      document.getElementById("dialogBox").classList.add("show");
+    };
+
+    // Close dialog
+    document.getElementById("closeDialog").onclick = closeDialog;
+    document.getElementById("overlay").onclick = closeDialog;
+
+    function closeDialog() {
+      document.getElementById("overlay").classList.remove("show");
+      document.getElementById("dialogBox").classList.remove("show");
+    }
+
+    // Next Page
+    document.getElementById("next").onclick = () => {
+      window.location.href = "page2.html";
+    };
+  </script>
+
+</body>
+</html>
